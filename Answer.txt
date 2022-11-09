@@ -1,0 +1,23 @@
+with customer_age_bands AS (
+	SELECT customer_id, age, 
+		CASE WHEN age > 65 THEN '3.Senior Citizen'               -- 65 and above
+		WHEN age > 40 AND age < 65 THEN '2.Middle Aged'		   -- 35 - 60 (inclusive)
+		ELSE '1.young' END AS Age_Band						   -- 0 to 40 (inclusive)
+	FROM customer 
+)
+SELECT c.Age_Band,
+	   ROUND(AVG(CASE WHEN internetservice = 'DSL' THEN 1 ELSE 0 END)*100.0,1) AS DSL_perc, 
+	   ROUND(AVG(CASE WHEN internetservice = 'Fiber Optic' THEN 1 ELSE 0 END)*100.0,1) AS FO_perc, 
+	   ROUND(AVG(CASE WHEN internetservice = 'None' THEN 1 ELSE 0 END)*100.0,1) AS No_Internet_perc, 
+	   ROUND(AVG(CASE WHEN phone = 'Yes' THEN 1 ELSE 0 END)*100.0,1) AS phone_perc, 
+	   ROUND(AVG(CASE WHEN multiple = 'Yes' THEN 1 ELSE 0 END)*100.0,1) AS multiple_perc, 
+	   ROUND(AVG(CASE WHEN onlinebackup = 'Yes' THEN 1 ELSE 0 END)*100.0,1) AS onlinebackup_perc,
+	   ROUND(AVG(CASE WHEN onlinesecurity = 'Yes' THEN 1 ELSE 0 END)*100.0,1) AS onlinesecurity_perc,
+	   ROUND(AVG(CASE WHEN deviceprotection = 'Yes' THEN 1 ELSE 0 END)*100.0,1) AS deviceprotection,
+	   ROUND(AVG(CASE WHEN techsupport = 'Yes' THEN 1 ELSE 0 END)*100.0,1) AS techsupport,
+	   count(*) as customer_count
+FROM customer_age_bands AS c
+INNER JOIN services AS s
+ON c.customer_id = s.customer_id
+GROUP BY c.Age_Band
+ORDER BY c.Age_Band;

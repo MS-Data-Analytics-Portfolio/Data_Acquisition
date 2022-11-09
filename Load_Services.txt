@@ -1,0 +1,16 @@
+DROP TABLE services;
+CREATE TABLE services (
+	customer_id varchar(9) PRIMARY KEY NOT NULL,
+	InternetService varchar(14),
+	Phone varchar(5),
+	Multiple varchar(5),
+	OnlineSecurity varchar(5),
+	OnlineBackup varchar(5),
+	DeviceProtection varchar(5),
+	TechSupport varchar(5)
+);
+
+COPY services 
+FROM 'C:/LabFiles/Services.csv' DELIMITER ',' CSV HEADER;
+
+select * from services ; 
